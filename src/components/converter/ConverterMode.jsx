@@ -167,12 +167,27 @@ const ConverterMode = ({ addToHistory }) => {
         setError('');
         
         try {
-          // For demo purposes, we're using mock data
-          // In a real application, you would use an API:
-          // const response = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
-          // const data = await response.json();
+          // Use real API with the provided API key
+          const apiKey = '2d482bbf70094f679bbbf927a227bfa0';
+          const response = await fetch(`https://openexchangerates.org/api/latest.json?app_id=${apiKey}`);
+          const data = await response.json();
           
-          // Mock exchange rates (as of May 2023 for demonstration)
+          if (data.error) {
+            throw new Error(data.description || 'Failed to fetch exchange rates');
+          }
+          
+          setExchangeRates(data.rates);
+          setCurrencyList(Object.keys(data.rates).map(code => ({
+            value: code,
+            label: `${code} - ${getCurrencyName(code)}`
+          })));
+          setLastUpdated(new Date(data.timestamp * 1000).toLocaleDateString());
+          
+        } catch (err) {
+          console.error('Currency API error:', err);
+          setError('Failed to fetch exchange rates. Please try again later.');
+          
+          // Fallback to mock data if API fails
           const mockData = {
             base: 'USD',
             date: new Date().toISOString().split('T')[0],
@@ -200,10 +215,7 @@ const ConverterMode = ({ addToHistory }) => {
             value: code,
             label: `${code} - ${getCurrencyName(code)}`
           })));
-          setLastUpdated(mockData.date);
-          
-        } catch (err) {
-          setError('Failed to fetch exchange rates. Please try again later.');
+          setLastUpdated(mockData.date + ' (Using fallback data)');
         } finally {
           setIsLoading(false);
         }
@@ -419,8 +431,10 @@ const ConverterMode = ({ addToHistory }) => {
         
         {conversionType === 'currency' && lastUpdated && (
           <div className="currency-info">
-            <p>Exchange rates as of {lastUpdated} (for demonstration purposes)</p>
-            <p className="note">Note: In a production app, these would be fetched from a real API.</p>
+            <p>Exchange rates as of {lastUpdated}</p>
+            {lastUpdated.includes('fallback') && (
+              <p className="note">Note: Using demonstration data. API connection failed.</p>
+            )}
           </div>
         )}
         
