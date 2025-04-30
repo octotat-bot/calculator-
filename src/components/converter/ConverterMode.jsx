@@ -167,55 +167,90 @@ const ConverterMode = ({ addToHistory }) => {
         setError('');
         
         try {
-          // Use real API with the provided API key
+          // Use real API with the provided API key - also try alternate endpoint that doesn't require base currency parameter
           const apiKey = '2d482bbf70094f679bbbf927a227bfa0';
-          const response = await fetch(`https://openexchangerates.org/api/latest.json?app_id=${apiKey}`);
+          const response = await fetch(`https://openexchangerates.org/api/latest.json?app_id=${apiKey}&prettyprint=false`);
           const data = await response.json();
           
           if (data.error) {
+            console.error('API Error:', data.error);
             throw new Error(data.description || 'Failed to fetch exchange rates');
           }
+          
+          if (!data.rates || Object.keys(data.rates).length === 0) {
+            console.error('No rates data returned from API:', data);
+            throw new Error('No exchange rate data available');
+          }
+          
+          console.log('API response:', data);
           
           setExchangeRates(data.rates);
           setCurrencyList(Object.keys(data.rates).map(code => ({
             value: code,
             label: `${code} - ${getCurrencyName(code)}`
           })));
-          setLastUpdated(new Date(data.timestamp * 1000).toLocaleDateString());
+          
+          if (data.timestamp) {
+            setLastUpdated(new Date(data.timestamp * 1000).toLocaleDateString());
+          } else {
+            setLastUpdated(new Date().toLocaleDateString());
+          }
           
         } catch (err) {
           console.error('Currency API error:', err);
-          setError('Failed to fetch exchange rates. Please try again later.');
+          setError(`Failed to fetch exchange rates: ${err.message || 'Unknown error'}`);
           
-          // Fallback to mock data if API fails
-          const mockData = {
-            base: 'USD',
-            date: new Date().toISOString().split('T')[0],
-            rates: {
-              USD: 1,
-              EUR: 0.92,
-              GBP: 0.79,
-              JPY: 134.33,
-              AUD: 1.48,
-              CAD: 1.35,
-              CHF: 0.90,
-              CNY: 6.93,
-              INR: 82.09,
-              BRL: 4.97,
-              MXN: 17.50,
-              RUB: 77.50,
-              KRW: 1337.22,
-              TRY: 19.57,
-              ZAR: 18.36
+          // Fallback to alternative API
+          try {
+            console.log('Trying alternative API...');
+            const response = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+            const data = await response.json();
+            
+            if (data.rates) {
+              setExchangeRates(data.rates);
+              setCurrencyList(Object.keys(data.rates).map(code => ({
+                value: code,
+                label: `${code} - ${getCurrencyName(code)}`
+              })));
+              setLastUpdated(data.date || new Date().toLocaleDateString() + ' (Alternative API)');
+              setError(''); // Clear error if alternative API works
+              console.log('Using alternative API successfully');
+            } else {
+              throw new Error('Alternative API failed');
             }
-          };
-          
-          setExchangeRates(mockData.rates);
-          setCurrencyList(Object.keys(mockData.rates).map(code => ({
-            value: code,
-            label: `${code} - ${getCurrencyName(code)}`
-          })));
-          setLastUpdated(mockData.date + ' (Using fallback data)');
+          } catch (altErr) {
+            console.error('Alternative API failed:', altErr);
+            
+            // Final fallback to mock data
+            const mockData = {
+              base: 'USD',
+              date: new Date().toISOString().split('T')[0],
+              rates: {
+                USD: 1,
+                EUR: 0.92,
+                GBP: 0.79,
+                JPY: 134.33,
+                AUD: 1.48,
+                CAD: 1.35,
+                CHF: 0.90,
+                CNY: 6.93,
+                INR: 82.09,
+                BRL: 4.97,
+                MXN: 17.50,
+                RUB: 77.50,
+                KRW: 1337.22,
+                TRY: 19.57,
+                ZAR: 18.36
+              }
+            };
+            
+            setExchangeRates(mockData.rates);
+            setCurrencyList(Object.keys(mockData.rates).map(code => ({
+              value: code,
+              label: `${code} - ${getCurrencyName(code)}`
+            })));
+            setLastUpdated(mockData.date + ' (Using fallback data)');
+          }
         } finally {
           setIsLoading(false);
         }
