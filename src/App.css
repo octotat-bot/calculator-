@@ -1,0 +1,313 @@
+#root {
+  max-width: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  height: 100vh;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+:root {
+  --primary-color: #8ab4f8;
+  --primary-gradient: linear-gradient(135deg, #8ab4f8, #6692d9);
+  --secondary-color: #81c995;
+  --secondary-gradient: linear-gradient(135deg, #81c995, #60a873);
+  --tertiary-color: #fdd663;
+  --tertiary-gradient: linear-gradient(135deg, #fdd663, #e8be41);
+  --danger-color: #f28b82;
+  --danger-gradient: linear-gradient(135deg, #f28b82, #d9665e);
+  --text-color: #e8eaed;
+  --background-color: #121418;
+  --card-bg: rgba(32, 33, 36, 0.9);
+  --button-bg: #3c4043;
+  --button-hover: #4d5156;
+  --shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  --sharp-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), 0 8px 16px rgba(0, 0, 0, 0.2);
+  --hover-shadow: 0 15px 30px rgba(0, 0, 0, 0.35);
+  --border-radius: 12px;
+  --button-radius: 8px;
+  
+  /* Additional colors for improved UI */
+  --accent-glow: 0 0 15px rgba(138, 180, 248, 0.5);
+  --focus-outline: 2px solid #8ab4f8;
+  --sidebar-active-bg: rgba(138, 180, 248, 0.15);
+  --scrollbar-thumb: #4d5156;
+  --scrollbar-track: #2d2e31;
+}
+
+body {
+  background: var(--background-color);
+  background-image: 
+    radial-gradient(circle at 90% 10%, rgba(138, 180, 248, 0.1) 0%, transparent 40%),
+    radial-gradient(circle at 10% 90%, rgba(129, 201, 149, 0.1) 0%, transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(253, 214, 99, 0.05) 0%, transparent 60%);
+  color: var(--text-color);
+  min-height: 100vh;
+  transition: background-color 0.5s, color 0.5s;
+  margin: 0;
+  padding: 0;
+}
+
+.calculator-container {
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+  width: 100%;
+  padding: 0;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  overflow: hidden;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.3);
+  border-radius: 0;
+}
+
+/* Sidebar styles */
+.sidebar {
+  width: 240px;
+  background-color: rgba(45, 46, 49, 0.95);
+  padding: 1.5rem 0;
+  box-shadow: var(--sharp-shadow);
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+  backdrop-filter: blur(10px);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.sidebar-header {
+  padding: 0 1.5rem 1.5rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sidebar-header h2 {
+  font-size: 1.4rem;
+  margin: 0;
+  color: var(--primary-color);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.mode-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0 1rem;
+}
+
+.mode-selector button {
+  text-align: left;
+  padding: 0.9rem 1.2rem;
+  border-radius: 10px;
+  background-color: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+}
+
+.mode-selector button:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  transform: translateX(3px);
+}
+
+.mode-selector button.active {
+  background-color: var(--sidebar-active-bg);
+  color: var(--primary-color);
+  font-weight: 600;
+  box-shadow: 0 0 0 1px rgba(138, 180, 248, 0.2);
+}
+
+.mode-selector button svg,
+.mode-selector button i {
+  margin-right: 0.8rem;
+  font-size: 1.3rem;
+  opacity: 0.9;
+}
+
+/* Main content area */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  background-color: rgba(32, 33, 36, 0.95);
+  backdrop-filter: blur(10px);
+  width: 100%;
+}
+
+header {
+  padding: 1.2rem 2.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background-color: rgba(45, 46, 49, 0.5);
+  backdrop-filter: blur(5px);
+}
+
+header h1 {
+  font-size: 1.6rem;
+  margin: 0;
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.controls {
+  display: flex;
+  gap: 1rem;
+}
+
+.controls button {
+  padding: 0.5rem 1.2rem;
+  border-radius: 8px;
+  background-color: rgba(60, 64, 67, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.controls button:hover {
+  background-color: rgba(77, 81, 86, 0.9);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.controls button:active {
+  transform: translateY(0);
+}
+
+.calculator-content {
+  flex: 1;
+  display: flex;
+  padding: 2.5rem;
+  gap: 2.5rem;
+  justify-content: center;
+}
+
+main {
+  flex: 1;
+  max-width: 1200px;
+  background: rgba(45, 46, 49, 0.5);
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+}
+
+/* Custom scrollbar for WebKit browsers */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb);
+  border-radius: 4px;
+  border: 2px solid var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--primary-color);
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .calculator-container {
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    width: 100%;
+    padding: 1rem 0;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  
+  .mode-selector {
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 0.5rem 1rem;
+    gap: 0.8rem;
+  }
+  
+  .mode-selector button {
+    flex: 0 0 auto;
+    min-width: max-content;
+    text-align: center;
+    justify-content: center;
+    padding: 0.7rem 1.2rem;
+  }
+  
+  .mode-selector button:hover {
+    transform: translateY(-2px);
+  }
+  
+  .calculator-content {
+    padding: 1.5rem;
+    flex-direction: column;
+  }
+  
+  main {
+    padding: 1.5rem;
+  }
+  
+  header {
+    padding: 1rem 1.5rem;
+  }
+  
+  header h1 {
+    font-size: 1.3rem;
+  }
+}

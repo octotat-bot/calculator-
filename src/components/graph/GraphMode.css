@@ -1,0 +1,230 @@
+.graph-calculator {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  padding: 1rem;
+  box-shadow: var(--shadow);
+  background-color: var(--background-color);
+}
+
+.graph-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.function-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.function-inputs h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+  color: var(--primary-color);
+}
+
+.function-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.function-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.function-label {
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.function-expression {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid var(--button-bg);
+  border-radius: var(--border-radius);
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-size: 1rem;
+}
+
+.function-controls {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.visibility-toggle, .remove-function {
+  padding: 0.25rem;
+  min-width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--button-bg);
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  color: var(--text-color);
+  opacity: 0.7;
+}
+
+.visibility-toggle.visible {
+  opacity: 1;
+}
+
+.visibility-toggle:hover, .remove-function:hover {
+  background-color: var(--button-hover);
+}
+
+.remove-function:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.add-function {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background-color: var(--secondary-color);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.range-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.range-section {
+  flex: 1;
+  min-width: 200px;
+}
+
+.range-section h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+  color: var(--primary-color);
+}
+
+.range-inputs {
+  display: flex;
+  gap: 1rem;
+}
+
+.range-input {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.range-input label {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.range-input input {
+  padding: 0.5rem;
+  border: 1px solid var(--button-bg);
+  border-radius: var(--border-radius);
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-size: 1rem;
+}
+
+.graph-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.points-control {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.points-control label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.points-control input {
+  width: 150px;
+}
+
+.points-control span {
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.plot-button {
+  padding: 0.5rem 1.5rem;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.error-message {
+  color: var(--danger-color);
+  padding: 0.5rem;
+  background-color: rgba(234, 67, 53, 0.1);
+  border-radius: var(--border-radius);
+  font-size: 0.9rem;
+}
+
+.graph-container {
+  position: relative;
+  height: 400px;
+  background-color: var(--button-bg);
+  border-radius: var(--border-radius);
+  padding: 1rem;
+}
+
+.coordinate-display {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--border-radius);
+  font-size: 0.85rem;
+  pointer-events: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .range-controls {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .range-section {
+    width: 100%;
+  }
+  
+  .graph-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .graph-container {
+    height: 300px;
+  }
+} 
