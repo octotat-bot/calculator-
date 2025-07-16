@@ -1,119 +1,47 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap');
 
 :root {
-  /* Colors */
-  --primary-color: #000000;
-  --secondary-color: #000000;
-  --tertiary-color: #000000;
-  --danger-color: #000000;
-  --accent-color: #000000;
-  
+  /* Main Colors */
+  --primary-color: #111111; /* Black for accents */
+  --secondary-color: #222222;
+  --danger-color: #111111;
+  --accent-color: #111111;
+
   /* Backgrounds */
-  --text-primary: #000000;
-  --text-secondary: #333333;
-  --text-accent: #000000;
-  --background-color: #FFFFFF;
+  --background-color: #FAFAFA; /* Off-white */
   --bg-primary: #FFFFFF;
-  --bg-secondary: #F0F0F0;
-  --bg-hover: #E0E0E0;
+  --bg-secondary: #F5F5F5;
+  --bg-hover: #E5E5E5;
   --bg-input: #FFFFFF;
-  --border-color: #000000;
-  
-  /* UI Elements */
-  --button-bg: #F0F0F0;
-  --button-hover: #D0D0D0;
-  --accent-color-transparent: rgba(0, 0, 0, 0.15);
-  
-  /* Calculator Specific */
-  --display-bg: #F0F0F0;
-  --display-text: #000000;
-  --keypad-bg: #F5F5F5;
-  --button-text: #000000;
-  --function-button-bg: #D0D0D0;
-  --function-button-text: #000000;
-  --function-button-hover-bg: #C0C0C0;
-  --button-hover-bg: #E0E0E0;
-  --card-bg: #FFFFFF;
-  --label-color: #333333;
-  --input-bg: #FFFFFF;
-  
-  /* Gradients */
-  --gradient-primary: none;
-  --gradient-secondary: none;
-  
-  /* Shadows */
-  --shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  --sharp-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  --hover-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  --inner-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
-  --glow-shadow: none;
-  
-  /* Border radius */
-  --border-radius: 4px;
-}
+  --border-color: #CCCCCC;
 
-body.dark-theme {
-  /* Colors */
-  --primary-color: #FFFFFF;
-  --secondary-color: #FFFFFF;
-  --tertiary-color: #FFFFFF;
-  --danger-color: #FFFFFF;
-  --accent-color: #FFFFFF;
-  
-  /* Backgrounds */
-  --text-primary: #FFFFFF;
-  --text-secondary: #CCCCCC;
-  --text-accent: #FFFFFF;
-  --background-color: #000000;
-  --bg-primary: #000000;
-  --bg-secondary: #1A1A1A;
-  --bg-hover: #333333;
-  --bg-input: #000000;
-  --border-color: #FFFFFF;
-  
+  /* Text */
+  --text-primary: #111111;
+  --text-secondary: #222222;
+  --text-accent: #111111;
+  --text-disabled: #888888;
+
   /* UI Elements */
-  --button-bg: #333333;
-  --button-hover: #444444;
-  --accent-color-transparent: rgba(255, 255, 255, 0.15);
-  
-  /* Calculator Specific */
-  --display-bg: #1A1A1A;
-  --display-text: #FFFFFF;
-  --keypad-bg: #0F0F0F;
-  --button-text: #FFFFFF;
-  --function-button-bg: #444444;
+  --button-bg: #F5F5F5;
+  --button-hover: #E5E5E5;
+  --button-text: #111111;
+  --function-button-bg: #111111;
   --function-button-text: #FFFFFF;
-  --function-button-hover-bg: #555555;
-  --button-hover-bg: #444444;
-  --card-bg: #1A1A1A;
-  --label-color: #CCCCCC;
-  --input-bg: #333333;
-  
-  /* Gradients */
-  --gradient-primary: none;
-  --gradient-secondary: none;
-  
+  --function-button-hover-bg: #222222;
+  --button-hover-bg: #E5E5E5;
+  --card-bg: #FFFFFF;
+  --label-color: #222222;
+  --input-bg: #FFFFFF;
+
   /* Shadows */
-  --shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  --sharp-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-  --hover-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  --inner-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow: 0 2px 8px rgba(0,0,0,0.04);
+  --sharp-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  --hover-shadow: 0 4px 12px rgba(0,0,0,0.10);
+  --inner-shadow: inset 0 1px 2px rgba(0,0,0,0.04);
   --glow-shadow: none;
-}
 
-/* Remove high contrast themes as we're consolidating to just black and white */
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html, body {
-  scroll-behavior: smooth;
-  width: 100%;
-  height: 100%;
-  overflow-x: hidden;
+  /* Border radius */
+  --border-radius: 8px;
 }
 
 body {
@@ -145,56 +73,58 @@ a {
 
 a:hover {
   text-decoration: underline;
-  color: var(--accent-color);
+  color: var(--primary-color);
 }
 
 button {
   cursor: pointer;
   font-family: 'Roboto', sans-serif;
-  border: none;
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
   transition: all 0.2s ease;
   font-weight: 500;
   padding: 0.6rem 1.2rem;
-}
-
-button:hover {
-  background-color: var(--button-hover);
-  transform: translateY(-1px);
+  background-color: var(--button-bg);
+  color: var(--button-text);
   box-shadow: var(--shadow);
 }
 
+button:hover {
+  background-color: var(--button-hover-bg);
+  color: var(--primary-color);
+  box-shadow: var(--hover-shadow);
+}
+
 button:active {
-  transform: translateY(0);
-  box-shadow: none;
+  background-color: var(--bg-hover);
+  color: var(--primary-color);
 }
 
 input, select {
   font-family: 'Roboto', sans-serif;
   outline: none;
   padding: 0.6rem 1rem;
-  background-color: var(--bg-input);
+  background-color: var(--input-bg);
   border: 1px solid var(--border-color);
   color: var(--text-primary);
   border-radius: var(--border-radius);
   transition: all 0.2s ease;
+  box-shadow: var(--inner-shadow);
 }
 
 input:focus, select:focus {
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 1px var(--accent-color-transparent);
+  box-shadow: 0 0 0 2px var(--primary-color);
 }
 
-/* Focus styling for better accessibility */
 button:focus-visible,
 input:focus-visible,
 select:focus-visible {
-  box-shadow: 0 0 0 2px var(--accent-color-transparent), 0 0 0 1px var(--primary-color);
+  box-shadow: 0 0 0 2px var(--primary-color), 0 0 0 1px var(--primary-color);
   border-color: var(--primary-color);
   outline: none;
 }
 
-/* Custom scrollbar for WebKit browsers */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -215,7 +145,6 @@ select:focus-visible {
   background-color: var(--primary-color);
 }
 
-/* Hide number input spinners */
 input[type=number]::-webkit-inner-spin-button, 
 input[type=number]::-webkit-outer-spin-button { 
   -webkit-appearance: none; 
@@ -226,7 +155,6 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 
-/* Screen reader text - visually hidden but accessible to screen readers */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -239,19 +167,16 @@ input[type=number] {
   border: 0;
 }
 
-/* Media queries for large screens */
 @media (min-width: 1600px) {
   .calculator-content {
     justify-content: center;
     padding: 3rem;
   }
-  
   main {
     max-width: 1400px;
   }
 }
 
-/* Fade in animation */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
@@ -261,14 +186,12 @@ input[type=number] {
   animation: fadeIn 0.3s ease forwards;
 }
 
-/* Placeholder styling */
 ::placeholder {
   color: var(--text-secondary);
   opacity: 0.7;
 }
 
-/* Selection styling */
 ::selection {
-  background-color: var(--accent-color-transparent);
-  color: var(--text-primary);
+  background-color: var(--primary-color);
+  color: #fff;
 }
