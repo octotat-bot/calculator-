@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import './App.css'
 import Calculator from './components/calculator/Calculator'
 import ScientificMode from './components/scientific/ScientificMode'
@@ -8,21 +8,36 @@ import GraphMode from './components/graph/GraphMode'
 import CalculusMode from './components/calculus/CalculusMode'
 import ConverterMode from './components/converter/ConverterMode'
 import VectorsMode from './components/vectors/VectorsMode'
+import ComplexMode from './components/complex/ComplexMode'
+import InequalityMode from './components/inequality/InequalityMode'
+import StatisticsMode from './components/statistics/StatisticsMode'
 import History from './components/calculator/History'
 
 function App() {
   const [mode, setMode] = useState('basic')
   const [history, setHistory] = useState([])
-  const [showHistory, setShowHistory] = useState(false)
-  
-  useEffect(() => {
-    // Apply dark theme by default
-    document.documentElement.className = '';
-  }, []);
 
   const addToHistory = (calculation) => {
     setHistory(prev => [...prev, calculation])
   }
+
+  // Function to get the title based on the current mode
+  const getModeTitleText = () => {
+    switch(mode) {
+      case 'basic': return 'Basic Calculator';
+      case 'scientific': return 'Scientific Calculator';
+      case 'complex': return 'Complex Numbers Calculator';
+      case 'inequality': return 'Inequality Solver';
+      case 'algebra': return 'Algebra Calculator';
+      case 'matrix': return 'Matrix Calculator';
+      case 'graph': return 'Graphing Calculator';
+      case 'calculus': return 'Calculus Tools';
+      case 'vectors': return 'Vectors & 3D Calculator';
+      case 'converter': return 'Unit Converter';
+      case 'statistics': return 'Statistics Calculator';
+      default: return 'Scientific Calculator';
+    }
+  };
 
   return (
     <div className="calculator-container">
@@ -45,6 +60,20 @@ function App() {
             aria-label="Scientific mode"
           >
             <i>🔬</i> Scientific
+          </button>
+          <button 
+            className={mode === 'complex' ? 'active' : ''} 
+            onClick={() => setMode('complex')}
+            aria-label="Complex Numbers mode"
+          >
+            <i>ℂ</i> Complex
+          </button>
+          <button 
+            className={mode === 'inequality' ? 'active' : ''} 
+            onClick={() => setMode('inequality')}
+            aria-label="Inequality mode"
+          >
+            <i>≤</i> Inequality
           </button>
           <button 
             className={mode === 'algebra' ? 'active' : ''} 
@@ -82,6 +111,13 @@ function App() {
             <i>↗️</i> Vectors & 3D
           </button>
           <button 
+            className={mode === 'statistics' ? 'active' : ''} 
+            onClick={() => setMode('statistics')}
+            aria-label="Statistics mode"
+          >
+            <i>📊</i> Statistics
+          </button>
+          <button 
             className={mode === 'converter' ? 'active' : ''} 
             onClick={() => setMode('converter')}
             aria-label="Converter mode"
@@ -94,30 +130,27 @@ function App() {
       {/* Main Content */}
       <div className="main-content">
         <header>
-          <h1>Scientific Calculator</h1>
-          <div className="controls">
-            <button 
-              onClick={() => setShowHistory(!showHistory)}
-              aria-label={showHistory ? "Hide history" : "Show history"}
-            >
-              {showHistory ? 'Hide History' : 'Show History'}
-            </button>
-          </div>
+          <h1>{getModeTitleText()}</h1>
         </header>
 
         <div className="calculator-content">
-          <main className="fade-in">
-            {mode === 'basic' && <Calculator addToHistory={addToHistory} />}
-            {mode === 'scientific' && <ScientificMode addToHistory={addToHistory} />}
-            {mode === 'algebra' && <AlgebraMode addToHistory={addToHistory} />}
-            {mode === 'matrix' && <MatrixMode addToHistory={addToHistory} />}
-            {mode === 'graph' && <GraphMode addToHistory={addToHistory} />}
-            {mode === 'calculus' && <CalculusMode addToHistory={addToHistory} />}
-            {mode === 'vectors' && <VectorsMode addToHistory={addToHistory} />}
-            {mode === 'converter' && <ConverterMode addToHistory={addToHistory} />}
-          </main>
-          
-          {showHistory && <History history={history} />}
+          <div className="calculator-layout">
+            <main className="fade-in">
+              {mode === 'basic' && <Calculator addToHistory={addToHistory} />}
+              {mode === 'scientific' && <ScientificMode addToHistory={addToHistory} />}
+              {mode === 'complex' && <ComplexMode addToHistory={addToHistory} />}
+              {mode === 'inequality' && <InequalityMode addToHistory={addToHistory} />}
+              {mode === 'algebra' && <AlgebraMode addToHistory={addToHistory} />}
+              {mode === 'matrix' && <MatrixMode addToHistory={addToHistory} />}
+              {mode === 'graph' && <GraphMode addToHistory={addToHistory} />}
+              {mode === 'calculus' && <CalculusMode addToHistory={addToHistory} />}
+              {mode === 'vectors' && <VectorsMode addToHistory={addToHistory} />}
+              {mode === 'statistics' && <StatisticsMode addToHistory={addToHistory} />}
+              {mode === 'converter' && <ConverterMode addToHistory={addToHistory} />}
+            </main>
+            
+            <History history={history} />
+          </div>
         </div>
       </div>
     </div>

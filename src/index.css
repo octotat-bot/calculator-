@@ -2,56 +2,16 @@
 
 :root {
   /* Colors */
-  --primary-color: #8ab4f8;
-  --secondary-color: #81c995;
-  --tertiary-color: #fdd663;
-  --danger-color: #f28b82;
-  --accent-color: #8ab4f8;
-  
-  /* Backgrounds */
-  --text-primary: #e8eaed;
-  --text-secondary: #9aa0a6;
-  --text-accent: #8ab4f8;
-  --background-color: #121418;
-  --bg-primary: #202124;
-  --bg-secondary: #2d2e31;
-  --bg-hover: #3c4043;
-  --bg-input: #202124;
-  --border-color: #5f6368;
-  
-  /* UI Elements */
-  --button-bg: #3c4043;
-  --button-hover: #4d5156;
-  --accent-color-transparent: rgba(138, 180, 248, 0.15);
-  
-  /* Gradients */
-  --gradient-primary: linear-gradient(135deg, #8ab4f8, #6692d9);
-  --gradient-secondary: linear-gradient(135deg, #81c995, #60a873);
-  
-  /* Shadows */
-  --shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  --sharp-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), 0 8px 16px rgba(0, 0, 0, 0.2);
-  --hover-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-  --inner-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
-  --glow-shadow: 0 0 20px rgba(138, 180, 248, 0.25);
-  
-  /* Border radius */
-  --border-radius: 8px;
-}
-
-/* High contrast theme for accessibility */
-body.high-contrast-theme {
-  /* Colors */
-  --primary-color: #0050FF;
-  --secondary-color: #00A000;
-  --tertiary-color: #F1C400;
-  --danger-color: #FF0000;
-  --accent-color: #0050FF;
+  --primary-color: #000000;
+  --secondary-color: #000000;
+  --tertiary-color: #000000;
+  --danger-color: #000000;
+  --accent-color: #000000;
   
   /* Backgrounds */
   --text-primary: #000000;
-  --text-secondary: #000000;
-  --text-accent: #0050FF;
+  --text-secondary: #333333;
+  --text-accent: #000000;
   --background-color: #FFFFFF;
   --bg-primary: #FFFFFF;
   --bg-secondary: #F0F0F0;
@@ -62,54 +22,86 @@ body.high-contrast-theme {
   /* UI Elements */
   --button-bg: #F0F0F0;
   --button-hover: #D0D0D0;
-  --accent-color-transparent: rgba(0, 80, 255, 0.2);
+  --accent-color-transparent: rgba(0, 0, 0, 0.15);
   
-  /* Gradients - removed for better contrast */
-  --gradient-primary: #0050FF;
-  --gradient-secondary: #00A000;
+  /* Calculator Specific */
+  --display-bg: #F0F0F0;
+  --display-text: #000000;
+  --keypad-bg: #F5F5F5;
+  --button-text: #000000;
+  --function-button-bg: #D0D0D0;
+  --function-button-text: #000000;
+  --function-button-hover-bg: #C0C0C0;
+  --button-hover-bg: #E0E0E0;
+  --card-bg: #FFFFFF;
+  --label-color: #333333;
+  --input-bg: #FFFFFF;
   
-  /* Enhanced borders and reduced shadows for clearer boundaries */
-  --shadow: 0 0 0 1px #000000;
-  --sharp-shadow: 0 0 0 2px #000000;
-  --hover-shadow: 0 0 0 2px #0050FF;
-  --inner-shadow: inset 0 0 0 1px #000000;
+  /* Gradients */
+  --gradient-primary: none;
+  --gradient-secondary: none;
+  
+  /* Shadows */
+  --shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --sharp-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --hover-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  --inner-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+  --glow-shadow: none;
+  
+  /* Border radius */
+  --border-radius: 4px;
 }
 
-/* Dark high contrast theme */
-body.dark-high-contrast-theme {
+body.dark-theme {
   /* Colors */
-  --primary-color: #70CFFF;
-  --secondary-color: #6FFF6F;
-  --tertiary-color: #FFED00;
-  --danger-color: #FF6F6F;
-  --accent-color: #70CFFF;
+  --primary-color: #FFFFFF;
+  --secondary-color: #FFFFFF;
+  --tertiary-color: #FFFFFF;
+  --danger-color: #FFFFFF;
+  --accent-color: #FFFFFF;
   
   /* Backgrounds */
   --text-primary: #FFFFFF;
-  --text-secondary: #FFFFFF;
-  --text-accent: #70CFFF;
+  --text-secondary: #CCCCCC;
+  --text-accent: #FFFFFF;
   --background-color: #000000;
   --bg-primary: #000000;
-  --bg-secondary: #0F0F0F;
-  --bg-hover: #2F2F2F;
+  --bg-secondary: #1A1A1A;
+  --bg-hover: #333333;
   --bg-input: #000000;
   --border-color: #FFFFFF;
   
   /* UI Elements */
-  --button-bg: #1F1F1F;
-  --button-hover: #3F3F3F;
-  --accent-color-transparent: rgba(112, 207, 255, 0.25);
+  --button-bg: #333333;
+  --button-hover: #444444;
+  --accent-color-transparent: rgba(255, 255, 255, 0.15);
   
-  /* Gradients - removed for better contrast */
-  --gradient-primary: #70CFFF;
-  --gradient-secondary: #6FFF6F;
+  /* Calculator Specific */
+  --display-bg: #1A1A1A;
+  --display-text: #FFFFFF;
+  --keypad-bg: #0F0F0F;
+  --button-text: #FFFFFF;
+  --function-button-bg: #444444;
+  --function-button-text: #FFFFFF;
+  --function-button-hover-bg: #555555;
+  --button-hover-bg: #444444;
+  --card-bg: #1A1A1A;
+  --label-color: #CCCCCC;
+  --input-bg: #333333;
   
-  /* Enhanced borders and reduced shadows for clearer boundaries */
-  --shadow: 0 0 0 1px #FFFFFF;
-  --sharp-shadow: 0 0 0 2px #FFFFFF;
-  --hover-shadow: 0 0 0 2px #70CFFF;
-  --inner-shadow: inset 0 0 0 1px #FFFFFF;
+  /* Gradients */
+  --gradient-primary: none;
+  --gradient-secondary: none;
+  
+  /* Shadows */
+  --shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  --sharp-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  --hover-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  --inner-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
+  --glow-shadow: none;
 }
+
+/* Remove high contrast themes as we're consolidating to just black and white */
 
 * {
   box-sizing: border-box;
@@ -154,7 +146,6 @@ a {
 a:hover {
   text-decoration: underline;
   color: var(--accent-color);
-  text-shadow: var(--glow-shadow);
 }
 
 button {
@@ -169,12 +160,12 @@ button {
 
 button:hover {
   background-color: var(--button-hover);
-  transform: translateY(-2px);
+  transform: translateY(-1px);
   box-shadow: var(--shadow);
 }
 
 button:active {
-  transform: translateY(1px);
+  transform: translateY(0);
   box-shadow: none;
 }
 
@@ -191,16 +182,16 @@ input, select {
 
 input:focus, select:focus {
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 2px var(--accent-color-transparent);
+  box-shadow: 0 0 0 1px var(--accent-color-transparent);
 }
 
 /* Focus styling for better accessibility */
 button:focus-visible,
 input:focus-visible,
 select:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 3px var(--accent-color-transparent), 0 0 0 1px var(--primary-color);
+  box-shadow: 0 0 0 2px var(--accent-color-transparent), 0 0 0 1px var(--primary-color);
   border-color: var(--primary-color);
+  outline: none;
 }
 
 /* Custom scrollbar for WebKit browsers */

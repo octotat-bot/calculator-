@@ -27,6 +27,147 @@
   transform: translateY(-2px);
 }
 
+/* Flashcard selection styles */
+.conversion-type-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1.2rem;
+  justify-content: center;
+  margin: 0.5rem auto 2rem;
+  max-width: 700px;
+  padding: 0.5rem;
+}
+
+.conversion-card {
+  width: 100%;
+  height: 140px;
+  border-radius: 12px;
+  background-color: var(--bg-primary);
+  box-shadow: var(--sharp-shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  padding: 1.5rem 1rem;
+}
+
+.conversion-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: var(--gradient-primary);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.conversion-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--hover-shadow);
+}
+
+.conversion-card:hover::before {
+  opacity: 1;
+}
+
+.conversion-card.active {
+  background: linear-gradient(to bottom, var(--bg-primary), var(--bg-secondary));
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  transform: translateY(-5px);
+}
+
+.conversion-card.active::before {
+  opacity: 1;
+}
+
+.conversion-card-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.8rem;
+  color: var(--accent-color);
+}
+
+.conversion-card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.back-to-selection {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--accent-color);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  margin-bottom: 1rem;
+}
+
+.back-to-selection:hover {
+  background-color: rgba(130, 80, 223, 0.1);
+}
+
+.back-to-selection svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.selection-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.selection-header h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.selection-header p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.conversion-mode-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  background-color: var(--bg-primary);
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: var(--inner-shadow);
+}
+
+.conversion-mode-header h2 {
+  font-size: 1.3rem;
+  margin: 0;
+  color: var(--text-primary);
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.conversion-header-icon {
+  font-size: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-color);
+}
+
+/* Original styles (keeping but modifying) */
 .conversion-type-select {
   display: flex;
   align-items: center;
@@ -71,6 +212,18 @@
   background-color: var(--bg-primary);
   border-radius: 10px;
   box-shadow: var(--inner-shadow);
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .converter-form {
@@ -227,6 +380,21 @@
     gap: 1.2rem;
   }
   
+  .conversion-type-cards {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+    padding: 0;
+  }
+  
+  .conversion-card {
+    height: 120px;
+    padding: 1rem;
+  }
+  
+  .conversion-card-icon {
+    font-size: 2rem;
+  }
+  
   .conversion-type-select {
     flex-direction: column;
     align-items: flex-start;
@@ -251,5 +419,267 @@
   .value-input,
   .unit-select {
     width: 100%;
+  }
+}
+
+/* BMI Calculator Styles */
+.bmi-calculator {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.bmi-units {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.bmi-units label {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.bmi-toggle {
+  display: flex;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+.bmi-toggle button {
+  flex: 1;
+  padding: 0.75rem;
+  border: none;
+  background-color: var(--bg-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.bmi-toggle button.active {
+  background-color: var(--accent-color);
+  color: white;
+}
+
+.bmi-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.unit-label {
+  display: flex;
+  align-items: center;
+  padding: 0 0.8rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 0.9rem;
+  background-color: var(--bg-secondary);
+  border-radius: 0 8px 8px 0;
+  border: 1px solid var(--border-color);
+  border-left: none;
+}
+
+.calculate-button {
+  padding: 0.9rem 1.5rem;
+  background: var(--gradient-primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: var(--sharp-shadow);
+  margin: 0.5rem 0;
+  align-self: center;
+}
+
+.calculate-button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--hover-shadow);
+}
+
+.bmi-result {
+  background-color: var(--bg-secondary);
+  padding: 1.2rem;
+  border-radius: 8px;
+  text-align: center;
+  border-top: 4px solid var(--accent-color);
+}
+
+.bmi-result h3 {
+  margin-top: 0;
+  margin-bottom: 0.8rem;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+.bmi-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--accent-color);
+  margin-bottom: 1.2rem;
+}
+
+.bmi-chart {
+  display: flex;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 1rem;
+}
+
+.bmi-range {
+  flex: 1;
+  padding: 0.6rem 0.3rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  font-size: 0.75rem;
+  color: white;
+  font-weight: 600;
+}
+
+.bmi-range.underweight {
+  background-color: #57b8ff;
+}
+
+.bmi-range.normal {
+  background-color: #20bf6b;
+}
+
+.bmi-range.overweight {
+  background-color: #f7b731;
+}
+
+.bmi-range.obese {
+  background-color: #eb3b5a;
+}
+
+/* GST Calculator Styles */
+.gst-calculator {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.gst-category-select, 
+.custom-gst-rate,
+.gst-operation {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.gst-category-select label,
+.custom-gst-rate label,
+.gst-operation label {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.gst-rate-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.gst-rate-options button {
+  padding: 0.75rem 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.gst-rate-options button:hover {
+  background-color: var(--bg-secondary);
+  transform: translateY(-2px);
+  box-shadow: var(--hover-shadow);
+}
+
+.gst-rate-options button.active {
+  background: var(--gradient-primary);
+  color: white;
+  border-color: transparent;
+}
+
+.gst-result {
+  margin-top: 1rem;
+  background-color: var(--bg-secondary);
+  border-radius: 8px;
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  border-left: 4px solid var(--accent-color);
+}
+
+.result-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.95rem;
+}
+
+.result-row.total {
+  margin-top: 0.5rem;
+  padding-top: 0.8rem;
+  border-top: 1px dashed var(--border-color);
+  font-weight: 700;
+  color: var(--accent-color);
+  font-size: 1.1rem;
+}
+
+.result-value {
+  font-weight: 600;
+}
+
+/* Media queries for GST calculator */
+@media (max-width: 768px) {
+  .gst-rate-options {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Numeral System Converter Styles */
+.numeral-calculator {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+/* General improvements for all calculators */
+.input-group {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .bmi-inputs .input-group,
+  .gst-calculator .input-group,
+  .numeral-calculator .input-group {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .bmi-chart {
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+  
+  .result-row {
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  
+  .result-row.total {
+    flex-direction: row;
   }
 } 

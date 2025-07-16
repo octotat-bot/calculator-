@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import './ConverterMode.css';
 
 const ConverterMode = ({ addToHistory }) => {
-  const [conversionType, setConversionType] = useState('length');
+  const [conversionType, setConversionType] = useState('');
   const [fromUnit, setFromUnit] = useState('');
   const [toUnit, setToUnit] = useState('');
   const [fromValue, setFromValue] = useState('');
@@ -12,6 +12,23 @@ const ConverterMode = ({ addToHistory }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [lastUpdated, setLastUpdated] = useState('');
+  const [selectionMode, setSelectionMode] = useState(true);
+
+  // Conversion types with icons
+  const conversionTypes = [
+    { id: 'length', label: 'Length', icon: '📏' },
+    { id: 'mass', label: 'Mass / Weight', icon: '⚖️' },
+    { id: 'temperature', label: 'Temperature', icon: '🌡️' },
+    { id: 'volume', label: 'Volume', icon: '🧪' },
+    { id: 'area', label: 'Area', icon: '📐' },
+    { id: 'time', label: 'Time', icon: '⏱️' },
+    { id: 'speed', label: 'Speed', icon: '🚀' },
+    { id: 'currency', label: 'Currency', icon: '💰' },
+    { id: 'gst', label: 'GST Calculator', icon: '🧾' },
+    { id: 'data', label: 'Data Units', icon: '💾' },
+    { id: 'numeral', label: 'Numeral Systems', icon: '🔢' },
+    { id: 'bmi', label: 'BMI Calculator', icon: '👤' }
+  ];
 
   // Conversion units by type
   const conversionUnits = {
@@ -75,7 +92,34 @@ const ConverterMode = ({ addToHistory }) => {
       { value: 'mph', label: 'Miles per hour (mph)' },
       { value: 'knot', label: 'Knots (kn)' }
     ],
-    currency: []
+    currency: [],
+    gst: [
+      { value: 'add', label: 'Add GST to Amount' },
+      { value: 'remove', label: 'Remove GST from Amount' },
+      { value: 'calculate', label: 'Calculate GST Amount' }
+    ],
+    data: [
+      { value: 'b', label: 'Bytes (B)' },
+      { value: 'kb', label: 'Kilobytes (KB)' },
+      { value: 'mb', label: 'Megabytes (MB)' },
+      { value: 'gb', label: 'Gigabytes (GB)' },
+      { value: 'tb', label: 'Terabytes (TB)' },
+      { value: 'pb', label: 'Petabytes (PB)' },
+      { value: 'kib', label: 'Kibibytes (KiB)' },
+      { value: 'mib', label: 'Mebibytes (MiB)' },
+      { value: 'gib', label: 'Gibibytes (GiB)' },
+      { value: 'tib', label: 'Tebibytes (TiB)' }
+    ],
+    numeral: [
+      { value: 'dec', label: 'Decimal (Base 10)' },
+      { value: 'bin', label: 'Binary (Base 2)' },
+      { value: 'oct', label: 'Octal (Base 8)' },
+      { value: 'hex', label: 'Hexadecimal (Base 16)' }
+    ],
+    bmi: [
+      { value: 'metric', label: 'Metric (kg, cm)' },
+      { value: 'imperial', label: 'Imperial (lb, in)' }
+    ]
   };
 
   // Conversion factors
@@ -140,11 +184,58 @@ const ConverterMode = ({ addToHistory }) => {
       'km/h': 0.277778,
       mph: 0.44704,
       knot: 0.514444
+    },
+    // Data units (to bytes)
+    data: {
+      'b': 1,
+      'kb': 1000,
+      'mb': 1000000,
+      'gb': 1000000000,
+      'tb': 1000000000000,
+      'pb': 1000000000000000,
+      'kib': 1024,
+      'mib': 1048576,
+      'gib': 1073741824,
+      'tib': 1099511627776
     }
+  };
+
+  // GST rates for different countries
+  const gstRates = {
+    'gst3': 3,
+    'gst5': 5,
+    'gst12': 12,
+    'gst18': 18,
+    'gst28': 28,
+    'custom': 0
+  };
+  
+  // State to handle special converter inputs
+  const [gstRate, setGstRate] = useState(gstRates.gst18);
+  const [gstCategory, setGstCategory] = useState('gst18');
+  const [customGstRate, setCustomGstRate] = useState('');
+  const [height, setHeight] = useState('');
+  const [weight, setWeight] = useState('');
+  const [bmiResult, setBmiResult] = useState('');
+
+  // Handle conversion type selection
+  const handleTypeSelect = (type) => {
+    setConversionType(type);
+    setSelectionMode(false);
+    setFromValue('');
+    setToValue('');
+    setError('');
+  };
+
+  // Back to selection mode
+  const handleBackToSelection = () => {
+    setSelectionMode(true);
   };
 
   // Initialize default units based on conversion type
   useEffect(() => {
+    if (!conversionType) return;
+    
     if (conversionType === 'currency') {
       if (currencyList.length > 0) {
         setFromUnit('USD');
@@ -305,6 +396,11 @@ const ConverterMode = ({ addToHistory }) => {
 
   // Perform conversion
   const convert = () => {
+    if (conversionType === 'bmi') {
+      calculateBMI();
+      return;
+    }
+    
     if (!fromValue || fromValue === '' || isNaN(parseFloat(fromValue))) {
       setToValue('');
       return;
@@ -325,6 +421,22 @@ const ConverterMode = ({ addToHistory }) => {
           result = valueInUSD * exchangeRates[toUnit];
         } else {
           throw new Error('Exchange rates not available.');
+        }
+      } else if (conversionType === 'gst') {
+        // GST calculation
+        result = calculateGST(value, fromUnit);
+      } else if (conversionType === 'numeral') {
+        // Numeral system conversion
+        result = convertNumeralSystem(value, fromUnit, toUnit);
+      } else if (conversionType === 'data') {
+        // Data unit conversion
+        const factors = conversionFactors[conversionType];
+        if (factors && factors[fromUnit] !== undefined && factors[toUnit] !== undefined) {
+          // Convert to base unit (bytes), then to target unit
+          const valueInBytes = value * factors[fromUnit];
+          result = valueInBytes / factors[toUnit];
+        } else {
+          throw new Error('Conversion factors not available.');
         }
       } else {
         // Standard unit conversion
@@ -385,103 +497,483 @@ const ConverterMode = ({ addToHistory }) => {
     return value.toFixed(decimalPlaces).replace(/\.?0+$/, '');
   };
 
+  // Get the conversion type label and icon
+  const getConversionTypeInfo = () => {
+    const type = conversionTypes.find(t => t.id === conversionType);
+    return type ? { label: type.label, icon: type.icon } : { label: '', icon: '' };
+  };
+
+  // GST calculation
+  const calculateGST = (value, operation) => {
+    const rate = gstCategory === 'custom' ? customGstRate : gstRates[gstCategory];
+    
+    if (operation === 'add') {
+      // Add GST to amount
+      return value * (1 + rate/100);
+    } else if (operation === 'remove') {
+      // Remove/extract GST from amount
+      return value / (1 + rate/100);
+    } else if (operation === 'calculate') {
+      // Calculate GST amount only
+      return value * (rate/100);
+    }
+    
+    throw new Error('Invalid GST operation');
+  };
+  
+  // Numeral system conversion
+  const convertNumeralSystem = (value, fromSystem, toSystem) => {
+    let decimalValue;
+    
+    // First convert to decimal (base 10) if not already
+    switch(fromSystem) {
+      case 'dec':
+        decimalValue = value;
+        break;
+      case 'bin':
+        decimalValue = parseInt(value.toString(), 2);
+        break;
+      case 'oct':
+        decimalValue = parseInt(value.toString(), 8);
+        break;
+      case 'hex':
+        decimalValue = parseInt(value.toString(), 16);
+        break;
+      default:
+        throw new Error('Unsupported numeral system');
+    }
+    
+    // Then convert from decimal to target system
+    switch(toSystem) {
+      case 'dec':
+        return decimalValue;
+      case 'bin':
+        return decimalValue.toString(2);
+      case 'oct':
+        return decimalValue.toString(8);
+      case 'hex':
+        return decimalValue.toString(16).toUpperCase();
+      default:
+        throw new Error('Unsupported numeral system');
+    }
+  };
+  
+  // BMI calculation
+  const calculateBMI = () => {
+    if (!height || !weight || isNaN(parseFloat(height)) || isNaN(parseFloat(weight))) {
+      setBmiResult('');
+      return;
+    }
+    
+    const heightVal = parseFloat(height);
+    const weightVal = parseFloat(weight);
+    let bmi;
+    
+    if (fromUnit === 'metric') {
+      // Metric: weight(kg) / height(m)²
+      const heightInMeters = heightVal / 100; // convert cm to m
+      bmi = weightVal / (heightInMeters * heightInMeters);
+    } else {
+      // Imperial: (weight(lb) * 703) / height(in)²
+      bmi = (weightVal * 703) / (heightVal * heightVal);
+    }
+    
+    let category = '';
+    if (bmi < 18.5) {
+      category = 'Underweight';
+    } else if (bmi < 25) {
+      category = 'Normal weight';
+    } else if (bmi < 30) {
+      category = 'Overweight';
+    } else {
+      category = 'Obesity';
+    }
+    
+    setBmiResult(`${bmi.toFixed(1)} - ${category}`);
+    
+    // Add to history
+    const historyEntry = `BMI Calculation: ${bmi.toFixed(1)} (${category})`;
+    addToHistory(historyEntry);
+  };
+
   return (
     <div className="converter-calculator">
-      <div className="conversion-type-select">
-        <label htmlFor="conversion-type">Conversion Type:</label>
-        <select 
-          id="conversion-type" 
-          value={conversionType} 
-          onChange={(e) => setConversionType(e.target.value)}
-        >
-          <option value="length">Length</option>
-          <option value="mass">Mass / Weight</option>
-          <option value="temperature">Temperature</option>
-          <option value="volume">Volume</option>
-          <option value="area">Area</option>
-          <option value="time">Time</option>
-          <option value="speed">Speed</option>
-          <option value="currency">Currency</option>
-        </select>
-      </div>
-      
-      <div className="converter-content">
-        <div className="converter-form">
-          <div className="input-group">
-            <label htmlFor="from-value">From:</label>
-            <input
-              id="from-value"
-              type="number"
-              value={fromValue}
-              onChange={(e) => setFromValue(e.target.value)}
-              placeholder="Enter value"
-              className="value-input"
-            />
-            <select 
-              id="from-unit" 
-              value={fromUnit} 
-              onChange={(e) => setFromUnit(e.target.value)}
-              className="unit-select"
-            >
-              {(conversionType === 'currency' ? currencyList : conversionUnits[conversionType]).map((unit) => (
-                <option key={unit.value} value={unit.value}>
-                  {unit.label}
-                </option>
-              ))}
-            </select>
+      {selectionMode ? (
+        <>
+          <div className="selection-header">
+            <h2>Choose Conversion Type</h2>
+            <p>Select the type of conversion you want to perform</p>
+          </div>
+          <div className="conversion-type-cards">
+            {conversionTypes.map(type => (
+              <div 
+                key={type.id}
+                className="conversion-card"
+                onClick={() => handleTypeSelect(type.id)}
+              >
+                <div className="conversion-card-icon">{type.icon}</div>
+                <div className="conversion-card-title">{type.label}</div>
+              </div>
+            ))}
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="conversion-mode-header">
+            <button className="back-to-selection" onClick={handleBackToSelection}>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M15 18l-6-6 6-6" />
+              </svg>
+              Back
+            </button>
+            <h2>
+              <span className="conversion-header-icon">{getConversionTypeInfo().icon}</span>
+              {getConversionTypeInfo().label}
+            </h2>
           </div>
           
-          <button className="swap-button" onClick={swapUnits} aria-label="Swap units">
-            ⇄
-          </button>
-          
-          <div className="input-group">
-            <label htmlFor="to-value">To:</label>
-            <input
-              id="to-value"
-              type="text"
-              value={toValue}
-              readOnly
-              className="value-input result"
-              placeholder="Result"
-            />
-            <select 
-              id="to-unit" 
-              value={toUnit} 
-              onChange={(e) => setToUnit(e.target.value)}
-              className="unit-select"
-            >
-              {(conversionType === 'currency' ? currencyList : conversionUnits[conversionType]).map((unit) => (
-                <option key={unit.value} value={unit.value}>
-                  {unit.label}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-        
-        {isLoading && <div className="loading-indicator">Loading exchange rates...</div>}
-        
-        {error && <div className="error-message">{error}</div>}
-        
-        {conversionType === 'currency' && lastUpdated && (
-          <div className="currency-info">
-            <p>Exchange rates as of {lastUpdated}</p>
-            {lastUpdated.includes('fallback') && (
-              <p className="note">Note: Using demonstration data. API connection failed.</p>
+          <div className="converter-content">
+            {conversionType === 'bmi' ? (
+              // BMI Calculator
+              <div className="bmi-calculator">
+                <div className="bmi-units">
+                  <label>Unit System:</label>
+                  <div className="bmi-toggle">
+                    <button 
+                      className={fromUnit === 'metric' ? 'active' : ''} 
+                      onClick={() => setFromUnit('metric')}
+                    >
+                      Metric (kg, cm)
+                    </button>
+                    <button 
+                      className={fromUnit === 'imperial' ? 'active' : ''} 
+                      onClick={() => setFromUnit('imperial')}
+                    >
+                      Imperial (lb, in)
+                    </button>
+                  </div>
+                </div>
+                
+                <div className="bmi-inputs">
+                  <div className="input-group">
+                    <label>Height:</label>
+                    <input
+                      type="number"
+                      value={height}
+                      onChange={(e) => setHeight(e.target.value)}
+                      placeholder={fromUnit === 'metric' ? 'Height in cm' : 'Height in inches'}
+                      className="value-input"
+                    />
+                    <span className="unit-label">{fromUnit === 'metric' ? 'cm' : 'in'}</span>
+                  </div>
+                  
+                  <div className="input-group">
+                    <label>Weight:</label>
+                    <input
+                      type="number"
+                      value={weight}
+                      onChange={(e) => setWeight(e.target.value)}
+                      placeholder={fromUnit === 'metric' ? 'Weight in kg' : 'Weight in pounds'}
+                      className="value-input"
+                    />
+                    <span className="unit-label">{fromUnit === 'metric' ? 'kg' : 'lb'}</span>
+                  </div>
+                </div>
+                
+                <button className="calculate-button" onClick={calculateBMI}>Calculate BMI</button>
+                
+                {bmiResult && (
+                  <div className="bmi-result">
+                    <h3>Your BMI:</h3>
+                    <div className="bmi-value">{bmiResult}</div>
+                    <div className="bmi-chart">
+                      <div className="bmi-range underweight">
+                        <span>Underweight</span>
+                        <span>&lt;18.5</span>
+                      </div>
+                      <div className="bmi-range normal">
+                        <span>Normal</span>
+                        <span>18.5-24.9</span>
+                      </div>
+                      <div className="bmi-range overweight">
+                        <span>Overweight</span>
+                        <span>25-29.9</span>
+                      </div>
+                      <div className="bmi-range obese">
+                        <span>Obesity</span>
+                        <span>&gt;30</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : conversionType === 'gst' ? (
+              // GST Calculator
+              <div className="gst-calculator">
+                <div className="gst-category-select">
+                  <label>GST Rate:</label>
+                  <div className="gst-rate-options">
+                    <button 
+                      className={gstCategory === 'gst3' ? 'active' : ''} 
+                      onClick={() => setGstCategory('gst3')}
+                    >
+                      3%
+                    </button>
+                    <button 
+                      className={gstCategory === 'gst5' ? 'active' : ''} 
+                      onClick={() => setGstCategory('gst5')}
+                    >
+                      5%
+                    </button>
+                    <button 
+                      className={gstCategory === 'gst12' ? 'active' : ''} 
+                      onClick={() => setGstCategory('gst12')}
+                    >
+                      12%
+                    </button>
+                    <button 
+                      className={gstCategory === 'gst18' ? 'active' : ''} 
+                      onClick={() => setGstCategory('gst18')}
+                    >
+                      18%
+                    </button>
+                    <button 
+                      className={gstCategory === 'gst28' ? 'active' : ''} 
+                      onClick={() => setGstCategory('gst28')}
+                    >
+                      28%
+                    </button>
+                    <button 
+                      className={gstCategory === 'custom' ? 'active' : ''} 
+                      onClick={() => setGstCategory('custom')}
+                    >
+                      Custom
+                    </button>
+                  </div>
+                </div>
+                
+                {gstCategory === 'custom' && (
+                  <div className="custom-gst-rate">
+                    <label>Custom GST Rate (%):</label>
+                    <input 
+                      type="number" 
+                      value={customGstRate}
+                      onChange={(e) => setCustomGstRate(e.target.value)}
+                      className="value-input"
+                      min="0"
+                      max="100"
+                      step="0.1"
+                    />
+                  </div>
+                )}
+                
+                <div className="gst-operation">
+                  <label>Operation:</label>
+                  <select 
+                    value={fromUnit}
+                    onChange={(e) => setFromUnit(e.target.value)}
+                    className="unit-select"
+                  >
+                    {conversionUnits.gst.map((unit) => (
+                      <option key={unit.value} value={unit.value}>
+                        {unit.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                
+                <div className="input-group">
+                  <label>Amount:</label>
+                  <input
+                    type="number"
+                    value={fromValue}
+                    onChange={(e) => setFromValue(e.target.value)}
+                    placeholder="Enter amount"
+                    className="value-input"
+                  />
+                </div>
+                
+                <button className="calculate-button" onClick={convert}>Calculate</button>
+                
+                {toValue && (
+                  <div className="gst-result">
+                    <div className="result-row">
+                      <span>Original Amount:</span>
+                      <span className="result-value">
+                        {fromUnit === 'add' ? fromValue : 
+                         fromUnit === 'remove' ? toValue : 
+                         fromValue}
+                      </span>
+                    </div>
+                    
+                    <div className="result-row">
+                      <span>GST Amount ({gstCategory === 'custom' ? customGstRate : gstRates[gstCategory]}%):</span>
+                      <span className="result-value">
+                        {fromUnit === 'calculate' ? toValue : 
+                         fromUnit === 'add' ? (toValue - fromValue).toFixed(2) : 
+                         (fromValue - toValue).toFixed(2)}
+                      </span>
+                    </div>
+                    
+                    <div className="result-row total">
+                      <span>Total Amount:</span>
+                      <span className="result-value">
+                        {fromUnit === 'add' ? toValue : 
+                         fromUnit === 'remove' ? fromValue : 
+                         parseFloat(fromValue) + parseFloat(toValue)}
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : conversionType === 'numeral' ? (
+              // Numeral System Converter
+              <div className="numeral-calculator">
+                <div className="input-group">
+                  <label>From:</label>
+                  <select 
+                    value={fromUnit}
+                    onChange={(e) => setFromUnit(e.target.value)}
+                    className="unit-select"
+                  >
+                    {conversionUnits.numeral.map((unit) => (
+                      <option key={unit.value} value={unit.value}>
+                        {unit.label}
+                      </option>
+                    ))}
+                  </select>
+                  <input
+                    type="text"
+                    value={fromValue}
+                    onChange={(e) => setFromValue(e.target.value)}
+                    placeholder="Enter number"
+                    className="value-input"
+                  />
+                </div>
+                
+                <button className="swap-button" onClick={swapUnits}>
+                  ⇄
+                </button>
+                
+                <div className="input-group">
+                  <label>To:</label>
+                  <select 
+                    value={toUnit}
+                    onChange={(e) => setToUnit(e.target.value)}
+                    className="unit-select"
+                  >
+                    {conversionUnits.numeral.map((unit) => (
+                      <option key={unit.value} value={unit.value}>
+                        {unit.label}
+                      </option>
+                    ))}
+                  </select>
+                  <input
+                    type="text"
+                    value={toValue}
+                    readOnly
+                    className="value-input result"
+                    placeholder="Result"
+                  />
+                </div>
+                
+                <button className="calculate-button" onClick={convert}>Convert</button>
+                
+                {fromValue && toValue && (
+                  <div className="formula-container">
+                    <h3>Conversion Details:</h3>
+                    <p>{`${fromValue} (${fromUnit === 'dec' ? 'Decimal' : 
+                          fromUnit === 'bin' ? 'Binary' : 
+                          fromUnit === 'oct' ? 'Octal' : 'Hexadecimal'}) = ${toValue} (${
+                          toUnit === 'dec' ? 'Decimal' : 
+                          toUnit === 'bin' ? 'Binary' : 
+                          toUnit === 'oct' ? 'Octal' : 'Hexadecimal'})`}
+                    </p>
+                  </div>
+                )}
+              </div>
+            ) : (
+              // Standard converter UI
+              <div className="converter-form">
+                <div className="input-group">
+                  <label htmlFor="from-value">From:</label>
+                  <input
+                    id="from-value"
+                    type="number"
+                    value={fromValue}
+                    onChange={(e) => setFromValue(e.target.value)}
+                    placeholder="Enter value"
+                    className="value-input"
+                    autoFocus
+                  />
+                  <select 
+                    id="from-unit" 
+                    value={fromUnit} 
+                    onChange={(e) => setFromUnit(e.target.value)}
+                    className="unit-select"
+                  >
+                    {(conversionType === 'currency' ? currencyList : conversionUnits[conversionType]).map((unit) => (
+                      <option key={unit.value} value={unit.value}>
+                        {unit.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                
+                <button className="swap-button" onClick={swapUnits} aria-label="Swap units">
+                  ⇄
+                </button>
+                
+                <div className="input-group">
+                  <label htmlFor="to-value">To:</label>
+                  <input
+                    id="to-value"
+                    type="text"
+                    value={toValue}
+                    readOnly
+                    className="value-input result"
+                    placeholder="Result"
+                  />
+                  <select 
+                    id="to-unit" 
+                    value={toUnit} 
+                    onChange={(e) => setToUnit(e.target.value)}
+                    className="unit-select"
+                  >
+                    {(conversionType === 'currency' ? currencyList : conversionUnits[conversionType]).map((unit) => (
+                      <option key={unit.value} value={unit.value}>
+                        {unit.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            )}
+            
+            {isLoading && <div className="loading-indicator">Loading exchange rates...</div>}
+            
+            {error && <div className="error-message">{error}</div>}
+            
+            {conversionType === 'currency' && lastUpdated && (
+              <div className="currency-info">
+                <p>Exchange rates as of {lastUpdated}</p>
+                {lastUpdated.includes('fallback') && (
+                  <p className="note">Note: Using demonstration data. API connection failed.</p>
+                )}
+              </div>
+            )}
+            
+            {!['bmi', 'gst', 'numeral'].includes(conversionType) && fromValue && toValue && (
+              <div className="conversion-formula">
+                <div className="formula-container">
+                  <h3>Conversion Details:</h3>
+                  <p>{`${fromValue} ${fromUnit} = ${toValue} ${toUnit}`}</p>
+                </div>
+              </div>
             )}
           </div>
-        )}
-        
-        <div className="conversion-formula">
-          {fromValue && toValue && (
-            <div className="formula-container">
-              <h3>Conversion Details:</h3>
-              <p>{`${fromValue} ${fromUnit} = ${toValue} ${toUnit}`}</p>
-            </div>
-          )}
-        </div>
-      </div>
+        </>
+      )}
     </div>
   );
 };
